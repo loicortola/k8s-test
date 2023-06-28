@@ -1,0 +1,25 @@
+{{- if .Values.api.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ annotations:
+   kubernetes.io/ingress.class: nginx
+ name: {{ template "AppCtx.apiName" . }}
+ labels: {{ include "AppCtx.apiLabels" . | nindent 4 }}
+spec:
+  rules:
+  - host: {{ .Values.api.ingress.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ template "AppCtx.apiName" . }}
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+     - {{ .Values.api.ingress.host }}
+    secretName: app-wildcard
+{{- end }}
