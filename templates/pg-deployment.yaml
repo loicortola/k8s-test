@@ -42,7 +42,12 @@ spec:
                 key: pg_password     # nom de la clef dans le secret contenant le password
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
-          name: {{ template "AppCtx.dbName" . }}
+          name: pg-data
       imagePullSecrets:
       - name: takima-school-registry
+      volumes:
+      - name: pg-data
+        persistentVolumeClaim:
+          claimName: {{ template "AppCtx.dbName" . }}
+
 {{- end }}
